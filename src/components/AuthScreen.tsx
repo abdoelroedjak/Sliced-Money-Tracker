@@ -133,10 +133,30 @@ export const AuthScreen: React.FC = () => {
                     <span>{errorCode}</span>
                   </div>
                   {isFirebaseActive && (
-                    <div className="mt-2 pt-2 border-t border-red-100 text-[11px] text-slate-600 space-y-1.5 leading-normal">
-                      <p>
-                        <strong>Tip:</strong> Bila error disebabkan oleh provider <em>Email/Password</em> yang belum diaktifkan di Firebase Console, atau kendala jaringan, Anda dapat melewati ini dengan mode offline lokal.
-                      </p>
+                    <div className="mt-2 pt-2 border-t border-red-100 text-[11px] text-slate-600 space-y-2 leading-normal">
+                      {errorCode.toLowerCase().includes('unauthorized-domain') ? (
+                        <div className="bg-amber-50 p-3 rounded-xl text-amber-900 border border-amber-100 space-y-1.5">
+                          <p className="font-bold text-xs text-amber-800 flex items-center gap-1">
+                            <span className="inline-block w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
+                            Cara Mengatasi Domain Tidak Terdaftar di Firebase:
+                          </p>
+                          <p className="text-[10.5px] text-amber-850">
+                            Firebase melarang login dari domain sebelum didaftarkan demi keamanan. Silakan:
+                          </p>
+                          <ol className="list-decimal pl-4.5 space-y-1 text-[10.5px] text-slate-700">
+                            <li>Buka <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" className="text-sky-600 font-semibold underline">Firebase Console</a></li>
+                            <li>Masuk ke proyek Anda, klik menu <strong>Build &gt; Authentication</strong></li>
+                            <li>Pilih tab <strong>Settings</strong> di atas</li>
+                            <li>Scroll ke bawah ke bagian <strong>Authorized domains</strong> (Domain resmi)</li>
+                            <li>Klik <strong>Add domain</strong> (Tambahkan domain)</li>
+                            <li>Masukkan <strong><code>sliced-money-tracker.vercel.app</code></strong> (tanpa https) lalu simpan</li>
+                          </ol>
+                        </div>
+                      ) : (
+                        <p>
+                          <strong>Tip:</strong> Bila error disebabkan oleh provider <em>Email/Password</em> yang belum diaktifkan di Firebase Console, atau kendala jaringan, Anda dapat melewati ini dengan mode offline lokal.
+                        </p>
+                      )}
                       <button
                         type="button"
                         onClick={() => {
