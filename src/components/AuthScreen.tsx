@@ -164,19 +164,22 @@ export const AuthScreen: React.FC = () => {
                             const rawUsers = localStorage.getItem('sliced_money_local_users');
                             const users = rawUsers ? JSON.parse(rawUsers) : {};
                             
+                            const cleanEmail = email.trim() || 'user.offline@gmail.com';
+                            const cleanPassword = password || '123456';
+
                             if (mode === 'register') {
-                              if (users[email]) {
+                              if (users[cleanEmail]) {
                                 setErrorCode('Email offline ini sudah terdaftar.');
                                 return;
                               }
-                              users[email] = { email, password };
+                              users[cleanEmail] = { email: cleanEmail, password: cleanPassword };
                               localStorage.setItem('sliced_money_local_users', JSON.stringify(users));
                             }
                             
                             const fakeUser = {
-                              uid: 'local_user_' + email.replace(/[^a-zA-Z0-9]/g, ''),
-                              email: email,
-                              displayName: email.split('@')[0]
+                              uid: 'local_user_' + cleanEmail.replace(/[^a-zA-Z0-9]/g, ''),
+                              email: cleanEmail,
+                              displayName: cleanEmail.split('@')[0]
                             };
                             localStorage.setItem('sliced_money_local_user', JSON.stringify(fakeUser));
                             window.location.reload();

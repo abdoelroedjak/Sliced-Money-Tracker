@@ -76,13 +76,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (isFirebaseActive) {
       const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser) {
+          // Clear any local user to avoid session conflict when successfully logged in with Firebase
+          localStorage.removeItem('sliced_money_local_user');
+          setLocalUser(null);
           setUser({
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             displayName: firebaseUser.displayName || firebaseUser.email?.split('@')[0],
           });
         } else {
-          setUser(null);
+          // Fallback to local offline saved user if present
+          if (localUser) {
+            setUser(localUser);
+          } else {
+            setUser(null);
+          }
         }
         setLoading(false);
       });
@@ -282,11 +290,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logout = async () => {
     if (isFirebaseActive) {
-      await signOut(auth);
-    } else {
-      localStorage.removeItem('sliced_money_local_user');
-      setLocalUser(null);
+      try {
+        await signOut(auth);
+      } catch (err) {
+        console.error("Firebase signOut error", err);
+      }
     }
+    localStorage.removeItem('sliced_money_local_user');
+    setLocalUser(null);
     setUser(null);
   };
 
