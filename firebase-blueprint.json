@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "transaction": {
+      "title": "Transaction",
+      "description": "Financial transaction record",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense"]
+        },
+        "category": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["userId", "amount", "type", "category", "date"]
+    },
+    "budget": {
+      "title": "Category Budget",
+      "description": "Monthly budget for a specific category",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string"
+        }
+      },
+      "required": ["userId", "category", "amount"]
+    },
+    "goal": {
+      "title": "Financial Goal",
+      "description": "Savings target and progress tracking",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "target": {
+          "type": "number"
+        },
+        "current": {
+          "type": "number"
+        },
+        "targetDate": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["userId", "name", "target", "current"]
+    },
+    "customCategory": {
+      "title": "Custom Category",
+      "description": "User-defined financial category",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense"]
+        }
+      },
+      "required": ["userId", "name", "type"]
+    }
+  },
+  "firestore": {
+    "users/{userId}/transactions/{transactionId}": {
+      "schema": {
+        "$ref": "#/entities/transaction"
+      },
+      "description": "Individual transaction entered by the user"
+    },
+    "users/{userId}/budgets/{categoryId}": {
+      "schema": {
+        "$ref": "#/entities/budget"
+      },
+      "description": "Monthly category budget limit"
+    },
+    "users/{userId}/goals/{goalId}": {
+      "schema": {
+        "$ref": "#/entities/goal"
+      },
+      "description": "Financial savings goal"
+    },
+    "users/{userId}/categories/{categoryId}": {
+      "schema": {
+        "$ref": "#/entities/customCategory"
+      },
+      "description": "User added custom expense or income category"
+    }
+  }
+}
